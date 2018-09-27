@@ -11,6 +11,7 @@ int main()
 	matrix my_test_mat;
 
 	matrix_create(&my_test_mat, 4, 4);
+	matrix_set(&my_test_mat,0.0);
 
 	MATRIX_ELEMENT(my_test_mat,2,3) = 21.5;
 

@@ -1,8 +1,10 @@
+#include <stdlib.h>
+
 #include "naivelinalg.h"
 
 
 bool matrix_create(matrix *target, int N, int M){
-target->N = N;
+	target->N = N;
 	target->M = M;
 
 	if(N==0 || M==0){
@@ -10,7 +12,12 @@ target->N = N;
 	}
 
 	//target->data = malloc(sizeof(matrix_data_t)*N*M);
-	target->data = calloc(sizeof(matrix_data_t),N*M);
+	//target->data = calloc(sizeof(matrix_data_t),N*M);
+	int memalign_result = posix_memalign(
+						(void**)(&(target->data)),
+	 					NAIVE_LINALG_ALIGNMENT,
+						sizeof(matrix_data_t)*N*M
+					);
 	if(NULL == target->data){
 		target->N = 0;
 		target->M = 0;

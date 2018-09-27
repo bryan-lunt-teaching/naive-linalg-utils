@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+//TODO: automagically detect the cache line size of the target machine.
+#define NAIVE_LINALG_ALIGNMENT 64
+
 typedef double matrix_data_t;
 
 typedef struct {
