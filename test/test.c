@@ -10,9 +10,12 @@ int main()
 
 	matrix my_test_mat;
 
-	create_matrix(&my_test_mat, 10, 10);
+	matrix_create(&my_test_mat, 4, 4);
 
+	MATRIX_ELEMENT(my_test_mat,2,3) = 21.5;
 
-	destroy_matrix(&my_test_mat);
+	matrix_fprint(stdout, &my_test_mat);
+
+	matrix_destroy(&my_test_mat);
    return 0;
 }

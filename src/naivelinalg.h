@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 typedef double matrix_data_t;
 
@@ -13,23 +14,29 @@ typedef struct {
 	int M;
 } matrix;
 
-bool create_matrix(matrix *target, int N, int M);
-bool destroy_matrix(matrix *target);
+#define ARRAY_ELEMENT(dptr, N, M, i, j) dptr[i*M + j]
+#define MATPTR_ELEMENT(matptr, i, j) ARRAY_ELEMENT(matptr->data, matptr->N, matptr->M, i, j)
+#define MATRIX_ELEMENT(matr, i, j) ARRAY_ELEMENT(matr.data, matr.N, matr.M, i, j)
 
-//implment such that target and source can be the same or different.
+bool matrix_create(matrix *target, int N, int M);
+bool matrix_destroy(matrix *target);
+bool copy_matrix(matrix *target, matrix *source);
+
+//implement such that target and source can be the same or different.
 bool transpose(matrix *target, matrix *source);
 
-bool value_matrix(matrix *target, double val);
-bool eye_matrix(matrix *target);
+bool matrix_set(matrix *target, matrix_data_t val);
+bool matrix_set_diag(matrix *target, matrix_data_t val);
+bool matrix_eye(matrix *target);
 
 //target and source may be the same.
-bool scalar_multiply(matrix *target, matrix *source, double val);
-bool scalar_add(matrix *target, matrix *source, double val);
+bool matrix_mult_scalar(matrix *target, matrix *source, matrix_data_t val);
+bool matrix_add_scalar(matrix *target, matrix *source, matrix_data_t val);
 
-bool copy_matrix(matrix *target, matrix *source);
-bool hadamard_multiply(matrix *target, matrix *A, matrix *B);
+bool matrix_hadamard_mult(matrix *target, matrix *A, matrix *B);
 
-bool naive_multiply(matrix *target, matrix *A, matrix *B);
+bool matrix_mult_naive(matrix *target, matrix *A, matrix *B);
 
+void matrix_fprint(FILE *outfile, matrix *toprint);
 
 #endif
