@@ -30,7 +30,7 @@ bool matrix_destroy(matrix *target);
 bool copy_matrix(matrix *target, matrix *source);
 
 //implement such that target and source can be the same or different.
-bool transpose(matrix *target, matrix *source);
+bool matrix_transpose(matrix *target, matrix *source);
 
 bool matrix_set(matrix *target, matrix_data_t val);
 bool matrix_set_diag(matrix *target, matrix_data_t val);
@@ -45,6 +45,8 @@ bool matrix_hadamard_mult(matrix *target, matrix *A, matrix *B);
 bool matrix_mult_naive(matrix *target, matrix *A, matrix *B);
 
 void matrix_fprint(FILE *outfile, matrix *toprint);
+
+bool matrix_equality(matrix *lhs, matrix *rhs, double epsilon);
 
 #ifdef __cplusplus
 }

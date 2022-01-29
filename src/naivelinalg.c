@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <math.h>
 
 #include "naivelinalg.h"
 
@@ -11,8 +12,12 @@ bool matrix_create(matrix *target, int N, int M){
 		target->data = NULL;
 	}
 
-	//target->data = malloc(sizeof(matrix_data_t)*N*M);
-	//target->data = calloc(sizeof(matrix_data_t),N*M);
+	//target->data = (matrix_data_t*)malloc(sizeof(matrix_data_t)*N*M);
+	//target->data = (matrix_data_t*)calloc(sizeof(matrix_data_t),N*M);
+	/*Neither of the above work because we need to be alligned
+		on a cache line boundary
+	*/
+	
 	int memalign_result = posix_memalign(
 						(void**)(&(target->data)),
 	 					NAIVE_LINALG_ALIGNMENT,
@@ -91,7 +96,7 @@ static bool transpose_self(matrix *justme){
 	return true;
 }
 
-bool transpose(matrix *target, matrix *source){
+bool matrix_transpose(matrix *target, matrix *source){
 
 	if(NULL==target->data ||
 		NULL==source->data ||
@@ -199,5 +204,19 @@ bool matrix_mult_naive(matrix *target, matrix *A, matrix *B){
 			MATPTR_ELEMENT(target,i,j) = tmpval;
 		}
 
+	return true;
+}
+
+bool matrix_equality(matrix *lhs, matrix *rhs, double epsilon) {
+	if(lhs->N != rhs->N || lhs->M != rhs->M)
+		return false;
+
+	int END = lhs->N*lhs->M;
+	matrix_data_t *ldata, *rdata;
+	ldata = lhs->data;
+	rdata = rhs->data;
+	for(int i = 0;i<END;i++){
+		if( fabs(ldata[i] - rdata[i]) > epsilon ) { return false; }
+	}
 	return true;
 }

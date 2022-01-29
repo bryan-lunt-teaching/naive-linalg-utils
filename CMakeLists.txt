@@ -10,6 +10,7 @@ set(CMAKE_MODULE_PATH
 
 add_library(naivelinalg STATIC "./src/naivelinalg.c" "./src/naivelinalg.h")
 target_include_directories(naivelinalg PUBLIC "./src")
+target_link_libraries(naivelinalg m)
 
 # add the executable
 add_executable(naivelinalg_test ./test/test.c)
