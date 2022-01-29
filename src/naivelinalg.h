@@ -1,6 +1,10 @@
 #ifndef NAIVELINALG_H
 #define NAIVELINALG_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -41,5 +45,9 @@ bool matrix_hadamard_mult(matrix *target, matrix *A, matrix *B);
 bool matrix_mult_naive(matrix *target, matrix *A, matrix *B);
 
 void matrix_fprint(FILE *outfile, matrix *toprint);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
