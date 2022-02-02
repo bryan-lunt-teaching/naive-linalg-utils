@@ -8,14 +8,11 @@ set(CMAKE_MODULE_PATH
     ${PROJECT_SOURCE_DIR}/cmake
     )
 
-add_library(naivelinalg STATIC "./src/naivelinalg.c" "./src/naivelinalg.h")
-target_include_directories(naivelinalg PUBLIC "./src")
-target_link_libraries(naivelinalg m)
+#add_library(naivelinalg STATIC "./src/naivelinalg.c" "./src/naivelinalg.h")
+#target_include_directories(naivelinalg PUBLIC "./src")
+#target_link_libraries(naivelinalg m)
+add_subdirectory("src")
 
-# add the executable
-add_executable(naivelinalg_test ./test/test.c)
-target_link_libraries(naivelinalg_test naivelinalg)
+add_subdirectory("test")
 
-
-add_executable(naivelinalg_testcpp ./test/testcpp.cpp)
-target_link_libraries(naivelinalg_testcpp naivelinalg)
+add_subdirectory("bench")
