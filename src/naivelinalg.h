@@ -21,7 +21,7 @@ typedef struct {
 	int M;
 } matrix;
 
-#define ARRAY_ELEMENT(dptr, N, M, i, j) dptr[i*M + j]
+#define ARRAY_ELEMENT(dptr, nRows, mCols, i, j) dptr[i*mCols + j]
 #define MATPTR_ELEMENT(matptr, i, j) ARRAY_ELEMENT(matptr->data, matptr->N, matptr->M, i, j)
 #define MATRIX_ELEMENT(matr, i, j) ARRAY_ELEMENT(matr.data, matr.N, matr.M, i, j)
 
