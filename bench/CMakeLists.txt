@@ -10,6 +10,19 @@ else(GBENCH_FOUND)
 endif(GBENCH_FOUND)
 
 
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
+
 #Benchmark targets
 add_executable(bench_example "bench_example.cpp")
 target_link_libraries(bench_example pthread GoogleBenchmark)
+
+add_executable(bench2 "benchmarks.cpp")
+target_link_libraries(bench2 pthread GoogleBenchmark naivelinalg)
