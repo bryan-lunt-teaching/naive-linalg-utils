@@ -190,15 +190,29 @@ bool matrix_hadamard_mult(matrix *target, matrix *A, matrix *B){
 }
 
 bool matrix_mult_naive(matrix *target, matrix *A, matrix *B){
+	/* It turns out, after extensive comparative testing,
+		the the compiler can optimize this naive code to be as fast as
+		a fairly carefully written version (of the same algorithm)
+		To get better performance, you need to use something like tiled mult.
+		DONT WASTE TIME OPTIMIZING THIS CODE, USE -O3
+		
+		Total hours spent self-doubting here: 6hrs
+			2022-2-4 Bryan J. Lunt 6hrs
+	*/
 	if(NULL == target->data || NULL == A->data || NULL == B->data) return false;
 	if(target->data == A->data || target->data == B->data) return false;
 
 	if(A->M != B->N) return false;
 	if(target->N != A->N || target->M != B->M) return false;
 
+	//Making this explicitly a register is
+	//the only necessary consession toward hand optimization.
+	register matrix_data_t tmpval = 0.0;
+
 	for(int i = 0;i<A->N;i++)
 		for(int j = 0;j<B->M;j++){
-			matrix_data_t tmpval = 0.0;
+			
+			tmpval = 0.0;
 			for(int k = 0;k<A->M;k++)
 				tmpval += MATPTR_ELEMENT(A,i,k)*MATPTR_ELEMENT(B,k,j);
 			MATPTR_ELEMENT(target,i,j) = tmpval;
