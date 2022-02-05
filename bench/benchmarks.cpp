@@ -63,6 +63,7 @@ static void Matrix_Alignment_0(benchmark::State& state) {
   
   //cache line size is 64 bytes (depending on cpu)
   //TODO: Automatic detection of cache line size.
+  state.counters["bits"] = 8*sizeof(matrix_data_t);
   state.counters["NperLine"] = (64/sizeof(matrix_data_t));
   state.counters["r"] = N%(64/sizeof(matrix_data_t));
 }
