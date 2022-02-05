@@ -195,9 +195,12 @@ bool matrix_add_scalar(matrix *target, matrix *source, matrix_data_t val){
 	return true;//Success
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 bool matrix_hadamard_mult(matrix *target, matrix *A, matrix *B){
 	return false;//not implemented
 }
+#pragma GCC diagnostic pop
 
 bool matrix_mult_naive(matrix *target, matrix *A, matrix *B){
 	/* It turns out, after extensive comparative testing,
