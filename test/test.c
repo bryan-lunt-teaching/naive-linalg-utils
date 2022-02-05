@@ -18,5 +18,5 @@ int main()
 	matrix_fprint(stdout, &my_test_mat);
 
 	matrix_destroy(&my_test_mat);
-   return 0;
+    return 0;
 }

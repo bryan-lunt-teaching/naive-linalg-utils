@@ -230,7 +230,7 @@ bool matrix_equality(const matrix *lhs, const matrix *rhs, const double epsilon)
 	if(lhs->N != rhs->N || lhs->M != rhs->M)
 		return false;//Not the same shape
 
-	int END = lhs->N*lhs->M;//Just scan as a 1d array. Actually, fix this.
+	int END = lhs->N*lhs->M;//Just scan as a 1d array. TODO: Actually, fix this.
 	matrix_data_t *ldata, *rdata;
 	ldata = lhs->data;
 	rdata = rhs->data;
