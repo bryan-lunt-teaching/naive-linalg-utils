@@ -60,7 +60,7 @@ static void Matrix_Alignment_0(benchmark::State& state) {
   state.counters["N"] = N;
   state.counters["num_threads"] = num_threads;//Always 1
   state.counters["mem"] = 3*int64_t(N)*int64_t(N)*sizeof(matrix_data_t);
-  state.counters["r"] = N%16;
+  state.counters["r"] = N%8;
 }
 BENCHMARK(Matrix_Alignment_0)->MeasureProcessCPUTime()
 ->Iterations(3)

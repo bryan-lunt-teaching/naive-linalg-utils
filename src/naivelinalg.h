@@ -13,7 +13,7 @@ extern "C" {
 //TODO: automagically detect the cache line size of the target machine.
 #define NAIVE_LINALG_ALIGNMENT 64
 
-typedef double matrix_data_t;
+typedef double matrix_data_t; //64bits = 8 bytes.
 
 typedef struct {
 	matrix_data_t *data;
