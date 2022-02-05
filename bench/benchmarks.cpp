@@ -60,7 +60,11 @@ static void Matrix_Alignment_0(benchmark::State& state) {
   state.counters["N"] = N;
   state.counters["num_threads"] = num_threads;//Always 1
   state.counters["mem"] = 3*int64_t(N)*int64_t(N)*sizeof(matrix_data_t);
-  state.counters["r"] = N%8;
+  
+  //cache line size is 64 bytes (depending on cpu)
+  //TODO: Automatic detection of cache line size.
+  state.counters["NperLine"] = (64/sizeof(matrix_data_t));
+  state.counters["r"] = N%(64/sizeof(matrix_data_t));
 }
 BENCHMARK(Matrix_Alignment_0)->MeasureProcessCPUTime()
 ->Iterations(3)
