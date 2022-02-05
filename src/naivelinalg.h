@@ -11,7 +11,7 @@ extern "C" {
 #include <stdio.h>
 
 //TODO: automagically detect the cache line size of the target machine.
-#define NAIVE_LINALG_ALIGNMENT 16
+#define NAIVE_LINALG_ALIGNMENT 64
 
 typedef double matrix_data_t;
 
