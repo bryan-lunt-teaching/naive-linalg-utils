@@ -4,7 +4,7 @@
 #include "naivelinalg.h"
 
 
-bool matrix_create(matrix *target, int N, int M){
+bool matrix_create(matrix *target, const int N, const int M){
 	target->N = N;
 	target->M = M;
 
@@ -37,8 +37,6 @@ bool matrix_create(matrix *target, int N, int M){
 	return true;
 }
 
-
-
 bool matrix_destroy(matrix *target){
 	free(target->data);
 	target->data = NULL;
@@ -47,7 +45,7 @@ bool matrix_destroy(matrix *target){
 	return true;
 }
 
-void matrix_fprint(FILE *outfile, matrix *toprint){
+void matrix_fprint(FILE *outfile, const matrix *toprint){
 	for(int i=0;i<toprint->N;i++){
 		fprintf(outfile, "[ ");
 		for(int j=0;j<toprint->M;j++){
@@ -58,16 +56,16 @@ void matrix_fprint(FILE *outfile, matrix *toprint){
 }
 
 
-bool copy_matrix(matrix *target, matrix *source){
+bool copy_matrix(matrix *target, const matrix *source){
+	if(NULL == target || NULL == source){
+		return false;
+	}
 	if(NULL == target->data || NULL == source->data){
 		return false;
 	}
 
-	if(target->N*target->M != source->N*source->M){
-		matrix_destroy(target);
-		bool recreate = matrix_create(target,source->N, source->M);
-		if(!recreate)
-			return false;
+	if(target->N != source->N || target->M != source->M){
+		return false;
 	}
 
 	target->N = source->N;
@@ -81,42 +79,33 @@ bool copy_matrix(matrix *target, matrix *source){
 }
 
 
-//implement such that target and source can be the same or different.
-static bool transpose_self(matrix *justme){
-	matrix tmp_matrix;
-	
-	//TODO: WTF?
-	//This library is _meant_ to be "naive", but this is not necessary.
-	bool tmpcreate = matrix_create(&tmp_matrix, justme->M, justme->N);
-	if(!tmpcreate)
-		return false;
-
-	for(int i = 0;i<justme->N;i++)
-		for(int j = 0;j<justme->M;j++)
-			MATRIX_ELEMENT(tmp_matrix,j,i) = MATPTR_ELEMENT(justme,i,j);
-
-	matrix_destroy(justme);
-	*justme = tmp_matrix;
-
-	return true;
-}
-
 bool matrix_transpose(matrix *target, matrix *source){
-
+	
+	//Check that the target is allocated and the right shape.
+	//NO resizing/reshaping. K.I.S.S.
 	if(NULL==target->data ||
 		NULL==source->data ||
 		target->N != source->M || target->M != source->N){
 		return false;
 	}
 
+	//Inplace, square only
 	if(target == source){
-		return transpose_self(source);
+		if (target->N != target->M){ return false;}//Not square //yes, check again.
+		register matrix_data_t from_ij;
+		register matrix_data_t from_ji;
+		for(int i = 0;i<source->N;i++)
+			for(int j = i+1;j<source->M;j++){
+				from_ij = MATPTR_ELEMENT(source,i,j);
+				from_ji = MATPTR_ELEMENT(source,j,i);
+				MATPTR_ELEMENT(target,j,i) = from_ij;
+				MATPTR_ELEMENT(target,i,j) = from_ji;
+			}
+		return true;
 	}
-
-
-	target->N = source->M;
-	target->M = source->N;
-
+	
+	
+	//out of place, any shape.
 	for(int i = 0;i<source->N;i++)
 		for(int j = 0;j<source->M;j++)
 			MATPTR_ELEMENT(target,j,i) = MATPTR_ELEMENT(source,i,j);
@@ -124,7 +113,7 @@ bool matrix_transpose(matrix *target, matrix *source){
 	return true;
 }
 
-bool matrix_set(matrix *target, matrix_data_t val){
+bool matrix_set(matrix *target, const matrix_data_t val){
 	if(NULL == target->data)
 		return false;
 	int size = target->N*target->M;
@@ -134,7 +123,7 @@ bool matrix_set(matrix *target, matrix_data_t val){
 }
 
 //TODO: An optional parameter that tells which diagonal to set
-bool matrix_set_diag(matrix *target, matrix_data_t val){
+bool matrix_set_diag(matrix *target, const matrix_data_t val){
 	if(NULL == target->data)
 		return false;
 	int main_diag_size = target->N < target->M ? target->N : target->M;
@@ -151,16 +140,13 @@ bool matrix_eye(matrix *target){
 
 	for(int i = 0;i<target->N;i++)
 		for(int j = 0;j<target->M;j++)
-			if(i == j)
-				MATPTR_ELEMENT(target,i,j) = 1.0;
-			else
-				MATPTR_ELEMENT(target,i,j) = 0.0;
+			MATPTR_ELEMENT(target,i,j) = (i == j) ? 1.0 : 0.0; //1.0 on main diagonal, 0.0 otherwise
 
 	return true;
 }
 
 //target and source may be the same.
-bool matrix_mult_scalar(matrix *target, matrix *source, matrix_data_t val){
+bool matrix_mult_scalar(matrix *target, matrix *source, const matrix_data_t val){
 	//check that they are both allocated matrices
 	if(NULL == target->data || NULL == source->data)
 		return false;
@@ -178,7 +164,7 @@ bool matrix_mult_scalar(matrix *target, matrix *source, matrix_data_t val){
 }
 
 
-bool matrix_add_scalar(matrix *target, matrix *source, matrix_data_t val){
+bool matrix_add_scalar(matrix *target, matrix *source, const matrix_data_t val){
 	//check that they are both allocated matrices
 	if(NULL == target->data || NULL == source->data)
 		return false;
@@ -202,7 +188,7 @@ bool matrix_hadamard_mult(matrix *target, matrix *A, matrix *B){
 }
 #pragma GCC diagnostic pop
 
-bool matrix_mult_naive(matrix *target, matrix *A, matrix *B){
+bool matrix_mult_naive(matrix *target, const matrix *A, const matrix *B){
 	/* It turns out, after extensive comparative testing,
 		the the compiler can optimize this naive code to be as fast as
 		a fairly carefully written version (of the same algorithm)
@@ -214,12 +200,12 @@ bool matrix_mult_naive(matrix *target, matrix *A, matrix *B){
 	*/
 	
 	//Check that inputs are valid and that we aren't outputting to one of the inputs.
-	if(NULL == target->data || NULL == A->data || NULL == B->data) return false;
-	if(target->data == A->data || target->data == B->data) return false;
+	if(NULL == target->data || NULL == A->data || NULL == B->data) return false; //Check validity
+	if(target->data == A->data || target->data == B->data) return false; //Check for deeper aliasing
 
 	//Check that shapes are compatible for multiplication.
-	if(A->M != B->N) return false;
-	if(target->N != A->N || target->M != B->M) return false;
+	if(A->M != B->N) return false; //A and B compatible.
+	if(target->N != A->N || target->M != B->M) return false; //output correct shape
 
 	//Making this explicitly a register is
 	//the only necessary consession toward hand optimization.
@@ -240,7 +226,7 @@ bool matrix_mult_naive(matrix *target, matrix *A, matrix *B){
 	return true;//Success
 }
 
-bool matrix_equality(matrix *lhs, matrix *rhs, double epsilon) {
+bool matrix_equality(const matrix *lhs, const matrix *rhs, const double epsilon) {
 	if(lhs->N != rhs->N || lhs->M != rhs->M)
 		return false;//Not the same shape
 

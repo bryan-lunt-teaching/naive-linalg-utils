@@ -25,28 +25,28 @@ typedef struct {
 #define MATPTR_ELEMENT(matptr, i, j) ARRAY_ELEMENT(matptr->data, matptr->N, matptr->M, i, j)
 #define MATRIX_ELEMENT(matr, i, j) ARRAY_ELEMENT(matr.data, matr.N, matr.M, i, j)
 
-bool matrix_create(matrix *target, int N, int M);
+bool matrix_create(matrix *target, const int N, const int M);
 bool matrix_destroy(matrix *target);
-bool copy_matrix(matrix *target, matrix *source);
+bool copy_matrix(matrix *target, const matrix *source);
 
 //implement such that target and source can be the same or different.
 bool matrix_transpose(matrix *target, matrix *source);
 
-bool matrix_set(matrix *target, matrix_data_t val);
-bool matrix_set_diag(matrix *target, matrix_data_t val); //TODO: An optional parameter that tells which diagonal to set
+bool matrix_set(matrix *target, const matrix_data_t val);
+bool matrix_set_diag(matrix *target, const matrix_data_t val); //TODO: An optional parameter that tells which diagonal to set
 bool matrix_eye(matrix *target);
 
 //target and source may be the same.
-bool matrix_mult_scalar(matrix *target, matrix *source, matrix_data_t val);
-bool matrix_add_scalar(matrix *target, matrix *source, matrix_data_t val);
+bool matrix_mult_scalar(matrix *target, matrix *source, const matrix_data_t val);
+bool matrix_add_scalar(matrix *target, matrix *source, const matrix_data_t val);
 
 bool matrix_hadamard_mult(matrix *target, matrix *A, matrix *B);
 
-bool matrix_mult_naive(matrix *target, matrix *A, matrix *B);
+bool matrix_mult_naive(matrix *target, const matrix *A, const matrix *B);
 
-void matrix_fprint(FILE *outfile, matrix *toprint);
+void matrix_fprint(FILE *outfile, const matrix *toprint);
 
-bool matrix_equality(matrix *lhs, matrix *rhs, double epsilon);
+bool matrix_equality(const matrix *lhs, const matrix *rhs, const double epsilon);
 
 #ifdef __cplusplus
 }
