@@ -20,9 +20,13 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 
+
 #Benchmark targets
 add_executable(bench_example "bench_example.cpp")
 target_link_libraries(bench_example pthread GoogleBenchmark)
 
+add_subdirectory("optim")
+
 add_executable(bench2 "benchmarks.cpp")
 target_link_libraries(bench2 pthread GoogleBenchmark naivelinalg)
+target_link_libraries(bench2 hand_optimized naivelinalg)

@@ -11,7 +11,7 @@ extern "C" {
 #include <stdio.h>
 
 //TODO: automagically detect the cache line size of the target machine.
-#define NAIVE_LINALG_ALIGNMENT 64
+#define NAIVE_LINALG_ALIGNMENT 16
 
 typedef double matrix_data_t;
 
@@ -33,7 +33,7 @@ bool copy_matrix(matrix *target, matrix *source);
 bool matrix_transpose(matrix *target, matrix *source);
 
 bool matrix_set(matrix *target, matrix_data_t val);
-bool matrix_set_diag(matrix *target, matrix_data_t val);
+bool matrix_set_diag(matrix *target, matrix_data_t val); //TODO: An optional parameter that tells which diagonal to set
 bool matrix_eye(matrix *target);
 
 //target and source may be the same.
