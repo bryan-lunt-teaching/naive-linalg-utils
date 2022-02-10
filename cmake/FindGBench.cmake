@@ -12,7 +12,7 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 
-### Version 2 of this cmake file ###
+### Version 3 of this cmake file ###
 
 find_path(GBENCH_INCLUDE_DIR "benchmark/benchmark.h"
 	HINTS ${GBENCH_ROOT}/include
@@ -32,26 +32,32 @@ find_library(GBENCH_MAIN_LIBRARIES_STATIC "${CMAKE_STATIC_LIBRARY_PREFIX}benchma
 
 #mark_as_advanced(GBENCH_INCLUDE_DIR)
 
+#
+#Google Test uses names (CMake 3.22): GTest::gtest GTest::gtest_main
+#and 					(CMake 3.12): GTest::GTest GTest::Main
+#follow that precedent.
+#
+
 if(GBENCH_CORE_LIBRARIES_STATIC AND GBENCH_MAIN_LIBRARIES_STATIC AND GBENCH_INCLUDE_DIR)
 	set(GBENCH_FOUND "TRUE")
 	set(GBENCH_BOTH_LIBRARIES ${GBENCH_CORE_LIBRARIES_STATIC} ${GBENCH_MAIN_LIBRARIES_STATIC})
 	set(GBENCH_INCLUDE_DIRS ${GBENCH_INCLUDE_DIR})
 	#message("GBENCH: ${GBENCH_LIBRARY} ${GBENCH_LIBRARY_MAIN}")
 	
-	add_library(GoogleBenchmark::main STATIC IMPORTED )
-	set_target_properties(GoogleBenchmark::main PROPERTIES IMPORTED_LOCATION ${GBENCH_MAIN_LIBRARIES_STATIC})
-	#target_link_libraries(google-benchmark INTERFACE ${GBENCH_LIBRARIES_STATIC} ${GBENCH_MAIN_LIBRARIES_STATIC})
-	#target_include_directories(google-benchmark INTERFACE ${GBENCH_INCLUDE_DIRS})
+	add_library(GBench::gbench_main STATIC IMPORTED )
+	set_target_properties(GBench::gbench_main PROPERTIES IMPORTED_LOCATION ${GBENCH_MAIN_LIBRARIES_STATIC})
+	target_link_libraries(GBench::gbench_main INTERFACE ${GBENCH_MAIN_LIBRARIES_STATIC})
+	target_include_directories(GBench::gbench_main INTERFACE ${GBENCH_INCLUDE_DIRS})
 	
-	add_library(GoogleBenchmark::core STATIC IMPORTED )
-	set_target_properties(GoogleBenchmark::core PROPERTIES IMPORTED_LOCATION ${GBENCH_CORE_LIBRARIES_STATIC})
-	#target_link_libraries(GoogleBenchmark::core INTERFACE ${GBENCH_LIBRARIES_STATIC})
-	#target_include_directories(GoogleBenchmark::core INTERFACE ${GBENCH_INCLUDE_DIRS})
+	add_library(GBench::gbench STATIC IMPORTED )
+	set_target_properties(GBench::gbench PROPERTIES IMPORTED_LOCATION ${GBENCH_CORE_LIBRARIES_STATIC})
+	target_link_libraries(GBench::gbench INTERFACE ${GBENCH_CORE_LIBRARIES_STATIC})
+	target_include_directories(GBench::gbench INTERFACE ${GBENCH_INCLUDE_DIRS})
 	
-	add_library(GoogleBenchmark INTERFACE)
-	target_link_libraries(GoogleBenchmark INTERFACE GoogleBenchmark::core)
+	#add_library(GoogleBenchmark INTERFACE)
+	#target_link_libraries(GoogleBenchmark INTERFACE GBench::gbench)
 	#TODO: Make linking (and even finding) main optional.
-	target_link_libraries(GoogleBenchmark INTERFACE GoogleBenchmark::main)
+	#target_link_libraries(GoogleBenchmark INTERFACE GBench::gbench_main)
 	
 	
 	message("GBENCH: Found! ${GBENCH_BOTH_LIBRARIES} ${GBENCH_INCLUDE_DIRS}")
