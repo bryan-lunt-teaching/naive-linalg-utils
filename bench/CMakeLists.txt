@@ -18,7 +18,7 @@ find_package(GBench REQUIRED)
 
 #Benchmark targets
 add_executable(bench_example "bench_example.cpp")
-target_link_libraries(bench_example pthread GBench::gbench GBench::gbench_main)
+target_link_libraries(bench_example GBench::gbench GBench::gbench_main)
 
 add_subdirectory("optim")
 
