@@ -8,6 +8,8 @@ set(CMAKE_MODULE_PATH
     ${PROJECT_SOURCE_DIR}/cmake
     )
 
+include(common)
+
 #add_library(naivelinalg STATIC "./src/naivelinalg.c" "./src/naivelinalg.h")
 #target_include_directories(naivelinalg PUBLIC "./src")
 #target_link_libraries(naivelinalg m)

@@ -16,8 +16,10 @@ add_test(testincpp naivelinalg_testcpp)
 #Now with Google Test
 enable_testing()
 find_package(GTest REQUIRED)
+include(GoogleTest) #test discovery and integration with CTest
 
 add_executable(gtest_tests "gtest_tests.cpp")
+target_link_libraries(gtest_tests naivelinalg)
 
 #Cmake 3.12
 target_link_libraries(gtest_tests GTest::GTest GTest::Main)
@@ -25,3 +27,4 @@ target_link_libraries(gtest_tests GTest::GTest GTest::Main)
 #CMake 3.22
 #target_link_libraries(gtest_tests GTest::gtest GTest::gtest_main)
 #add_test(All_Gtest_Tests gtest_tests)
+gtest_discover_tests(gtest_tests)

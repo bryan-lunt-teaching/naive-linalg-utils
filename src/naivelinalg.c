@@ -91,6 +91,7 @@ bool matrix_copy(matrix *target, const matrix *source){
 	target->N = source->N;
 	target->M = source->M;
 
+	//Deliberately Naive. Memcopy would be faster.
 	for(int i = 0;i<source->N;i++)
 		for(int j = 0;j<source->M;j++)
 			MATPTR_ELEMENT(target, i, j) = MATPTR_ELEMENT(source, i, j);
@@ -204,7 +205,23 @@ bool matrix_add_scalar(matrix *target, matrix *source, const matrix_data_t val){
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 bool matrix_hadamard_mult(matrix *target, matrix *A, matrix *B){
-	return false;//not implemented
+	if(NULL == target->data || NULL == A->data || NULL == B->data)
+		return false; //Null matrices
+	
+	//Check shapes
+	if( (target->N != A->N || A->N != B->N) ||
+ 		(target->M != A->M || A->M != B->M) ){
+			return false; //not all the same shape.
+		}
+	//Don't care about aliasing.
+	
+	for(int i = 0;i<target->N;i++){
+		for(int j = 0;j<target->M;j++){
+			MATPTR_ELEMENT(target,i,j) = MATPTR_ELEMENT(A,i,j)*MATPTR_ELEMENT(B,i,j);
+		}
+	}
+	
+	return true;
 }
 #pragma GCC diagnostic pop
 
