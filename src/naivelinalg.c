@@ -88,8 +88,8 @@ bool matrix_copy(matrix *target, const matrix *source){
 		return false;
 	}
 
-	target->N = source->N;
-	target->M = source->M;
+	//target->N = source->N;
+	//target->M = source->M;
 
 	//Deliberately Naive. Memcopy would be faster.
 	for(int i = 0;i<source->N;i++)
@@ -137,9 +137,10 @@ bool matrix_transpose(matrix *target, matrix *source){
 bool matrix_set(matrix *target, const matrix_data_t val){
 	if(NULL == target->data)
 		return false;
-	int size = target->N*target->M;
-	for(int i=0; i<size; i++)
-		target->data[i] = val;
+
+	for(int i=0; i<target->N; i++)
+		for(int j=0; j<target->M; j++)
+			MATPTR_ELEMENT(target,i,j) = val;
 	return true;
 }
 
@@ -271,18 +272,10 @@ bool matrix_equality(const matrix *lhs, const matrix *rhs, const double epsilon)
 	choose machine epsilon.
 	*/
 	
-	/*
-	TODO: Actually, fix this.
-		Scanning as 1D is acceptable because we know they are the same shape.
-		However, it violates the design principle of being totally naive.
-	*/
-
-	int END = lhs->N*lhs->M;//Just scan as a 1d array.
-	matrix_data_t *ldata, *rdata;
-	ldata = lhs->data;
-	rdata = rhs->data;
-	for(int i = 0;i<END;i++){
-		if( fabs(ldata[i] - rdata[i]) > epsilon ) { return false; }
+	for(int i = 0;i<lhs->N;i++){
+		for(int j = 0;j<lhs->M;j++){
+			if( fabs(MATPTR_ELEMENT(lhs,i,j)) - fabs(MATPTR_ELEMENT(rhs,i,j)) > epsilon ) { return false; }
+		}
 	}
 	return true;//Success
 }
