@@ -34,6 +34,9 @@ bool matrix_create(matrix *target, const int N, const int M){
 		on a cache line boundary
 	*/
 	
+	/* TODO: Automatically detect cache line size of machine. (At runtime?) */
+	/* TODO: Should large matrices be aligned on page boundaries? Find out. */
+	
 	int memalign_result = posix_memalign(
 						(void**)(&(target->data)),
 	 					NAIVE_LINALG_ALIGNMENT,
@@ -72,14 +75,15 @@ void matrix_fprint(FILE *outfile, const matrix *toprint){
 }
 
 
-bool copy_matrix(matrix *target, const matrix *source){
+bool matrix_copy(matrix *target, const matrix *source){
 	if(NULL == target || NULL == source){
 		return false;
 	}
 	if(NULL == target->data || NULL == source->data){
 		return false;
 	}
-
+	/* Deliberately omit test to prevent self-copy */
+	
 	if(target->N != source->N || target->M != source->M){
 		return false;
 	}

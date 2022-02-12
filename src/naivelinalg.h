@@ -32,18 +32,24 @@ extern "C" {
 typedef double matrix_data_t; //float = 32bits = 4bytes ; double = 64bits = 8 bytes.
 
 typedef struct {
-	matrix_data_t *data;
-	int N;
-	int M;
+	matrix_data_t *data; /*!< A 1D array containing all the matrix data in row-major order */
+	int N; /*!< The number of rows in the matrix */
+	int M; /*!< The number of columns in the matrix */
 } matrix;
+
+#define MATRIX_IS_ALLOCATED(matr) (NULL != (matr).data)
+#define MATRIX_SIZE(matr) ((matr).N * (matr).M)
+#define MATRIX_STORAGE_BYTES(matr) (MATRIX_SIZE(matr)*sizeof(matrix_data_t))
+
+#define MATRIX_SAME_SHAPE(lhs,rhs) ((lhs).N == (rhs).N && (lhs).M == (rhs).M)
 
 #define ARRAY_ELEMENT(dptr, nRows, mCols, i, j) dptr[i*mCols + j]
 #define MATPTR_ELEMENT(matptr, i, j) ARRAY_ELEMENT(matptr->data, matptr->N, matptr->M, i, j)
-#define MATRIX_ELEMENT(matr, i, j) ARRAY_ELEMENT(matr.data, matr.N, matr.M, i, j)
+#define MATRIX_ELEMENT(matr, i, j) ARRAY_ELEMENT((matr).data, (matr).N, (matr).M, i, j)
 
-bool matrix_create(matrix *target, const int N, const int M);
+bool matrix_create(matrix *target, const int N /*!< N rows */, const int M /*!< M cols */);
 bool matrix_destroy(matrix *target);
-bool copy_matrix(matrix *target, const matrix *source);
+bool matrix_copy(matrix *target, const matrix *source);
 
 //implement such that target and source can be the same or different.
 bool matrix_transpose(matrix *target, matrix *source);
