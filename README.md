@@ -1,6 +1,6 @@
 # naive-linalg-utils
 
-Naive implementations of linear algebra and some typedefs.
+Naive implementations of basic Matrix operations and some typedefs.
 
 This code can serve as a starting point for student projects, or as a baseline code.
 It is deliberately naive about how to handle various operations.
@@ -11,6 +11,9 @@ benchmarks when teaching an HPC class, or it could serve as a baseline of correc
 when teaching a linear algebra class.
 
 ## Usage
+This code is inappropriate for "real" HPC applications. Use a well-tuned BLAS library.
+This code _is_ appropriate as simple example code for computer programming classes.
+
 
 ### Cmake
 
