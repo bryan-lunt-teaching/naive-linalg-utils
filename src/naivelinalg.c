@@ -1,3 +1,19 @@
+/*
+Copyright 2018 Bryan J. Lunt <bryan.j.lunt@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 #include <stdlib.h>
 #include <math.h>
 
@@ -229,8 +245,18 @@ bool matrix_mult_naive(matrix *target, const matrix *A, const matrix *B){
 bool matrix_equality(const matrix *lhs, const matrix *rhs, const double epsilon) {
 	if(lhs->N != rhs->N || lhs->M != rhs->M)
 		return false;//Not the same shape
+	/*
+	TODO: Remove epsilon parameter, or make it optional, automatically
+	choose machine epsilon.
+	*/
+	
+	/*
+	TODO: Actually, fix this.
+		Scanning as 1D is acceptable because we know they are the same shape.
+		However, it violates the design principle of being totally naive.
+	*/
 
-	int END = lhs->N*lhs->M;//Just scan as a 1d array. TODO: Actually, fix this.
+	int END = lhs->N*lhs->M;//Just scan as a 1d array.
 	matrix_data_t *ldata, *rdata;
 	ldata = lhs->data;
 	rdata = rhs->data;
