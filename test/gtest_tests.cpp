@@ -18,7 +18,7 @@ TEST(MATRIX_f64,creation_destruction_macros) {
     EXPECT_EQ(amat.N, 4) << "Wrong number of rows!";
     EXPECT_EQ(amat.M, 5) << "Wrong number of cols!";
     EXPECT_EQ(MATRIX_SIZE(amat),4*5) << "Created matrix does not have the right size!";
-    EXPECT_EQ(MATRIX_STORAGE_BYTES(amat),4*5*sizeof(matrix_data_t)) << "Wrong storage size?";
+    EXPECT_EQ(MATRIX_STORAGE_BYTES(amat),4*8*sizeof(matrix_data_t)) << "Wrong storage size?";
 
     success_value = matrix_destroy(&amat);
     ASSERT_EQ(success_value, true) << "Error destroying matrix.";
